@@ -13,7 +13,7 @@ class Bullet {
 
 
     draw() {
-
+        this.ctx.fillStyle = 'black'
         this.ctx.fillRect(this.bulletPos.x, this.bulletPos.y, this.bulletSize.w, this.bulletSize.h)
         this.move()
     }

@@ -1,6 +1,6 @@
 class Platforms {
 
-    constructor(ctx, canvasSize, platformPosX, platformsPosY, platformsSizeW, platformsSizeH) {
+    constructor(ctx, canvasSize, { x: platformPosX, y: platformsPosY }, { w: platformsSizeW, h: platformsSizeH }) {
 
         this.ctx = ctx
         this.canvasSize = canvasSize
