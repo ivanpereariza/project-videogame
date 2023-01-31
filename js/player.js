@@ -1,5 +1,5 @@
 class Player {
-    constructor(ctx, canvasSize, keys, platforms, enemys, coins) {
+    constructor(ctx, canvasSize, keys, platforms, enemys, coins, hearts, acids) {
         this.ctx = ctx
         this.canvasSize = canvasSize
         this.playerSize = { w: 60, h: 100 }
@@ -15,6 +15,10 @@ class Player {
         this.canShoot = true
         this.enemys = enemys
         this.coins = coins
+        this.hearts = hearts
+        this.acids = acids
+        this.coinsCount = 0
+        this.livesCount = 3
         this.setListeners()
 
     }
@@ -25,9 +29,13 @@ class Player {
         this.ctx.fillStyle = 'black'
         this.ctx.fillRect(this.playerPos.x, this.playerPos.y, this.playerSize.w, this.playerSize.h)
         this.bullets.forEach(elm => elm.draw())
-        this.colisionEnemyBullet()
-        this.colisionBullet()
-        this.colisionCoin()
+        this.ctx.font = '50px Serif'
+        this.ctx.fillText(`Coins: ${this.coinsCount}`, 1300, 50)
+        this.ctx.fillText(`Lives: ${this.livesCount}`, 50, 50)
+        this.collisionEnemyBullet()
+        this.collisionBullet()
+        this.collisionCoin()
+        this.collisionHeart()
         this.move()
         this.clearBullets()
     }
@@ -35,37 +43,53 @@ class Player {
 
     move() {
 
-        //Movimiento personaje limitado
+        //Player movement restricted
         if (this.fluidLeft && this.playerPos.x > 300) this.playerVel.x = -3
         else if (this.fluidRight && this.playerPos.x < 700) this.playerVel.x = 3
         else this.playerVel.x = 0
         this.playerPos.x += this.playerVel.x
 
-        //Movimiento plataformas
+        //Plaatforms movement
         if (this.fluidLeft && this.playerPos.x <= 300) {
             this.platforms.forEach(elm => elm.platformsPos.x += 3)
         } else if (this.fluidRight && this.playerPos.x >= 700) {
             this.platforms.forEach(elm => elm.platformsPos.x -= 3)
         }
 
-        //Movimiento enemigos
+        //Enemy movement
         if (this.fluidLeft && this.playerPos.x <= 300) {
             this.enemys.forEach(elm => elm.enemyPos.x += 3)
         } else if (this.fluidRight && this.playerPos.x >= 700) {
             this.enemys.forEach(elm => elm.enemyPos.x -= 3)
         }
 
-        //Movimiento monedas
+        //Coins movement
         if (this.fluidLeft && this.playerPos.x <= 300) {
             this.coins.forEach(elm => elm.coinPos.x += 3)
         } else if (this.fluidRight && this.playerPos.x >= 700) {
             this.coins.forEach(elm => elm.coinPos.x -= 3)
         }
 
+
+        //Hearts movement
+        if (this.fluidLeft && this.playerPos.x <= 300) {
+            this.hearts.forEach(elm => elm.heartPos.x += 3)
+        } else if (this.fluidRight && this.playerPos.x >= 700) {
+            this.hearts.forEach(elm => elm.heartPos.x -= 3)
+        }
+
+
+        //Acids movement
+        if (this.fluidLeft && this.playerPos.x <= 300) {
+            this.acids.forEach(elm => elm.acidsPos.x += 3)
+        } else if (this.fluidRight && this.playerPos.x >= 700) {
+            this.acids.forEach(elm => elm.acidsPos.x -= 3)
+        }
+
         if (this.playerPos.y < this.playerPos0.y) {
             this.playerPos.y += this.playerVel.y
             this.playerVel.y += this.gravity
-            this.colisionPlatform()
+            this.collisionPlatform()
         }
         else {
             this.playerPos.y = this.playerPos0.y
@@ -88,6 +112,7 @@ class Player {
                 case this.keys.SHOOT:
                     if (this.canShoot) this.shoot()
                     this.canShoot = false
+                    console.log('-1 de vida')
                     break;
 
             }
@@ -115,7 +140,7 @@ class Player {
     }
 
     shoot() {
-        this.bullets.push(new Bullet(this.ctx, this.playerPos, this.playerSize, this.playerPos0))
+        this.bullets.push(new Bullet(this.ctx, this.playerPos, this.playerSize, this.playerPos0, this.fluidLeft, this.fluidRight))
     }
 
     clearBullets() {
@@ -124,9 +149,9 @@ class Player {
 
 
 
-    //Colision del player con las plataformas
+    //Collision player with platforms
 
-    colisionPlatform() {
+    collisionPlatform() {
         this.platforms.forEach(elm => {
             if (this.playerPos.y + this.playerSize.h <= elm.platformsPos.y &&
                 this.playerPos.y + this.playerSize.h + this.playerVel.y >= elm.platformsPos.y &&
@@ -137,9 +162,9 @@ class Player {
         })
     }
 
-    //Colision de la bala del player contra el enemigo
+    //Collision player bullet with enemy
 
-    colisionBullet() {
+    collisionBullet() {
         this.bullets.forEach((bullet, i) => {
             this.enemys.forEach((enemy, j) => {
                 if (bullet.bulletPos.x < enemy.enemyPos.x + enemy.enemySize.w &&
@@ -154,37 +179,60 @@ class Player {
         })
     }
 
-    //Colision de la bala enemiga en el player
+    //Collision enemy bullet with player
 
-    colisionEnemyBullet() {
+    collisionEnemyBullet() {
         this.enemys.forEach(elm => {
-            elm.enemyBullets.forEach(enemyBullet => {
+            elm.enemyBullets.forEach((enemyBullet, i) => {
                 if (this.playerPos.x < enemyBullet.enemyBulletPos.x + enemyBullet.enemyBulletSize.w &&
                     this.playerPos.y < enemyBullet.enemyBulletPos.y + enemyBullet.enemyBulletSize.h &&
                     this.playerPos.x + this.playerSize.w > enemyBullet.enemyBulletPos.x &&
                     this.playerPos.y + this.playerSize.h > enemyBullet.enemyBulletPos.y) {
-                    console.log('me han dado!!!')
+                    this.livesCount--
+                    this.enemys.forEach(elm => elm.enemyBullets.splice(i, 1))
                 }
             })
         })
 
     }
 
-    //Colision player con coin
+    //Collision player with coins
 
-    colisionCoin() {
+    collisionCoin() {
         this.coins.forEach((elm, i) => {
             if (this.playerPos.x < elm.coinPos.x + elm.coinSize.w &&
                 this.playerPos.y < elm.coinPos.y + elm.coinSize.h &&
                 this.playerPos.x + this.playerSize.w > elm.coinPos.x &&
                 this.playerPos.y + this.playerSize.h > elm.coinPos.y) {
                 this.coins.splice(i, 1)
-                console.log('+1 moneda!!!')
+                this.coinsCount++
             }
         })
     }
 
+    //Collision player with hearts
 
+    collisionHeart() {
+        if (this.livesCount < 3) {
+            this.hearts.forEach((elm, i) => {
+                if (this.playerPos.x < elm.heartPos.x + elm.heartSize.w &&
+                    this.playerPos.y < elm.heartPos.y + elm.heartSize.h &&
+                    this.playerPos.x + this.playerSize.w > elm.heartPos.x &&
+                    this.playerPos.y + this.playerSize.h > elm.heartPos.y) {
+                    this.hearts.splice(i, 1)
+                    this.livesCount++
+                }
+            })
+        }
+    }
+
+
+
+    // gameOver() {
+    //     if (this.livesCount = 0) {
+    //         this.init()
+    //     }
+    // }
 
 
 

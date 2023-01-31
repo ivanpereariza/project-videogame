@@ -17,6 +17,7 @@ class Enemy {
         this.ctx.fillStyle = "green"
         this.ctx.fillRect(this.enemyPos.x, this.enemyPos.y, this.enemySize.w, this.enemySize.h)
         this.enemyBullets.forEach(elm => elm.draw())
+        console.log(this.enemyBullets)
         this.moveBullets()
         this.clearBullets()
     }

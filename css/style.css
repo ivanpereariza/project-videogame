@@ -3,7 +3,6 @@ body {
     justify-content: center;
 }
 
-
 canvas {
-    background-color: rgb(252, 193, 193);
+    background-color: pink;
 }

@@ -1,6 +1,6 @@
 class Bullet {
 
-    constructor(ctx, playerPos, playerSize, playerPos0) {
+    constructor(ctx, playerPos, playerSize, playerPos0, fluidLeft, fluidRight) {
         this.ctx = ctx
         this.playerPos = playerPos
         this.playerSize = playerSize
@@ -8,6 +8,9 @@ class Bullet {
         this.bulletSize = { w: 20, h: 20 }
         this.bulletPos = { x: (this.playerPos.x + this.playerSize.w), y: this.playerPos.y + ((playerSize.h / 2) - 10) }
         this.bulletVel = { x: 10, y: 0 }
+        this.fluidLeft = fluidLeft
+        this.fluidRight = fluidRight
+        this.bulletsPos()
     }
 
 
@@ -18,8 +21,25 @@ class Bullet {
         this.move()
     }
 
+
+    bulletsPos() {
+        if (this.fluidRight) {
+            this.bulletPos.x = (this.playerPos.x + this.playerSize.w)
+        } else if (this.fluidLeft) {
+            this.bulletPos.x = (this.playerPos.x - this.bulletSize.w)
+        } else this.bulletPos.x = (this.playerPos.x + this.playerSize.w)
+
+
+    }
+
     move() {
-        this.bulletPos.x += this.bulletVel.x
+        if (this.fluidRight) {
+            this.bulletPos.x += this.bulletVel.x
+        } else if (this.fluidLeft) {
+            this.bulletPos.x -= this.bulletVel.x
+        } else this.bulletPos.x += this.bulletVel.x
+
+
     }
 
 }
