@@ -14,7 +14,7 @@ class Background {
 
     init() {
         this.background = new Image()
-        this.background.src = "./img/fondo.jpg"
+        this.background.src = "./img/fondo2.jpg"
     }
 
 

@@ -1,12 +1,11 @@
 class BossBullet {
-    constructor(ctx, canvasSize, player, bossSize, bossPos) {
+    constructor(ctx, canvasSize, bossSize, bossPos) {
         this.ctx = ctx
         this.canvasSize = canvasSize
         this.bossSize = bossSize
         this.bossPos = bossPos
-        this.player = player
         this.bossBulletSize = { w: 100, h: 25 }
-        this.bossBulletPos = { x: bossPos.x, y: this.player.playerPos.y }
+        this.bossBulletPos = { x: bossPos.x, y: ((Math.random() * 350) + 225) }
     }
 
     draw() {

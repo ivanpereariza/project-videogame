@@ -10,23 +10,31 @@ const controlerApp = {
     player: undefined,
     boss: undefined,
     background: undefined,
+    interval: undefined,
+    gameOverImg: undefined,
+    framesCounter: 0,
     platforms: [],
+    wallsLeft: [],
+    wallsRight: [],
     acids: [],
     enemys: [],
     coins: [],
     hearts: [],
+    livesCount: undefined,
+    enemyBullets: [],
+    FPS: 60,
     keys: {
         MOVELEFT: "ArrowLeft",
         MOVERIGHT: "ArrowRight",
         JUMP: "Space",
         SHOOT: "KeyA"
     },
-    FPS: 60,
 
 
     init() {
         this.setContext()
         this.setDimensions()
+        this.drawGameOver()
         this.start()
     },
 
@@ -47,8 +55,10 @@ const controlerApp = {
         this.enemys.forEach(elm => elm.draw())
         this.coins.forEach(elm => elm.draw())
         this.hearts.forEach(elm => elm.draw())
-        this.player.draw()
-        // this.boss.draw()
+        this.wallsLeft.forEach(elm => elm.draw())
+        this.wallsRight.forEach(elm => elm.draw())
+        this.player.init(this.framesCounter)
+        this.boss.draw()
     },
     clearAll() {
         this.ctx.clearRect(0, 0, this.canvasSize.w, this.canvasSize.h)
@@ -56,21 +66,44 @@ const controlerApp = {
 
     start() {
         this.reset()
-        setInterval(() => {
+
+        this.interval = setInterval(() => {
+            this.framesCounter > 5000 ? this.framesCounter = 0 : this.framesCounter++
             this.clearAll()
             this.drawAll()
             this.player.move()
-        }, 10)
+            if (this.player.livesCount === 0) {
+                this.gameOver()
+            } else if ((this.player.playerPos.y + this.player.playerSize.h) === this.canvasSize.h) {
+                this.gameOver()
+            }
+        }, 1000 / this.FPS)
     },
 
+    drawGameOver() {
+        this.gameOverImg = new Image()
+        this.gameOverImg.src = "./img/gameover.jpg"
+    },
+
+
+    gameOver() {
+        this.ctx.drawImage(this.gameOverImg, 0, 0, this.canvasSize.w, this.canvasSize.h)
+        clearInterval(this.interval)
+        setTimeout(() => {
+            location.reload()
+        }, 2000)
+    },
+
+
     reset() {
-        this.player = new Player(this.ctx, this.canvasSize, this.keys, this.platforms, this.enemys, this.coins, this.hearts, this.acids)
         this.boss = new Boss(this.ctx, this.canvasSize, this.player)
+        this.player = new Player(this.ctx, this.canvasSize, this.keys, this.platforms, this.enemys, this.coins, this.hearts, this.acids, this.enemyBullets, this.boss, this.wallsLeft, this.wallsRight)
         this.generatePlatforms()
         this.generateEnemys()
         this.generateCoins()
         this.generateHearts()
         this.generateAcids()
+        this.generateWalls()
         this.background = new Background(this.ctx, this.canvasSize, this.player)
     },
 
@@ -78,15 +111,15 @@ const controlerApp = {
 
     generateEnemys() {
         this.enemys.push(
-            new Enemy(this.ctx, this.canvasSize, this.platforms, this.player, { x: 1000, y: 550 }),
-            new Enemy(this.ctx, this.canvasSize, this.platforms, this.player, { x: 2350, y: 550 }),
-            new Enemy(this.ctx, this.canvasSize, this.platforms, this.player, { x: 3000, y: 300 }),
-            new Enemy(this.ctx, this.canvasSize, this.platforms, this.player, { x: 3600, y: 550 }),
-            new Enemy(this.ctx, this.canvasSize, this.platforms, this.player, { x: 4840, y: 350 }),
-            new Enemy(this.ctx, this.canvasSize, this.platforms, this.player, { x: 6250, y: 550 }),
-            new Enemy(this.ctx, this.canvasSize, this.platforms, this.player, { x: 7550, y: 550 }),
-            new Enemy(this.ctx, this.canvasSize, this.platforms, this.player, { x: 9050, y: 550 }),
-            new Enemy(this.ctx, this.canvasSize, this.platforms, this.player, { x: 9750, y: 250 }),
+            new Enemy(this.ctx, this.canvasSize, this.platforms, this.player, this.enemyBullets, { x: 1000, y: 550 }),
+            new Enemy(this.ctx, this.canvasSize, this.platforms, this.player, this.enemyBullets, { x: 2350, y: 550 }),
+            new Enemy(this.ctx, this.canvasSize, this.platforms, this.player, this.enemyBullets, { x: 3000, y: 300 }),
+            new Enemy(this.ctx, this.canvasSize, this.platforms, this.player, this.enemyBullets, { x: 3600, y: 550 }),
+            new Enemy(this.ctx, this.canvasSize, this.platforms, this.player, this.enemyBullets, { x: 4840, y: 350 }),
+            new Enemy(this.ctx, this.canvasSize, this.platforms, this.player, this.enemyBullets, { x: 6250, y: 550 }),
+            new Enemy(this.ctx, this.canvasSize, this.platforms, this.player, this.enemyBullets, { x: 7550, y: 550 }),
+            new Enemy(this.ctx, this.canvasSize, this.platforms, this.player, this.enemyBullets, { x: 9050, y: 550 }),
+            new Enemy(this.ctx, this.canvasSize, this.platforms, this.player, this.enemyBullets, { x: 9750, y: 250 }),
 
         )
     },
@@ -125,11 +158,18 @@ const controlerApp = {
             new Platforms(this.ctx, this.canvasSize, { x: 9800, y: 300 }, { w: 100, h: 100 }, 1),
             new Platforms(this.ctx, this.canvasSize, { x: 9850, y: 600 }, { w: 50, h: 100 }, 2),
             new Platforms(this.ctx, this.canvasSize, { x: 10050, y: 600 }, { w: 500, h: 100 }, 1),
+        )
+    },
+
+    generateWalls() {
+        this.wallsLeft.push(
+            // new WallLeft(this.ctx, this.canvasSize, { x: 100, y: 0 }, { w: 100, h: 700 }),
+            // new WallLeft(this.ctx, this.canvasSize, { x: 300, y: 500 }, { w: 100, h: 700 }),
 
 
-
-
-
+        )
+        this.wallsRight.push(
+            // new WallRight(this.ctx, this.canvasSize, { x: 200, y: 0 }, { w: 100, h: 700 })
         )
     },
 
@@ -187,8 +227,7 @@ const controlerApp = {
 
 
         )
-    }
-
+    },
 
 }
 

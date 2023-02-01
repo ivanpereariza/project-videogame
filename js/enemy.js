@@ -1,13 +1,14 @@
 class Enemy {
 
-    constructor(ctx, canvasSize, platforms, player, { x: enemyPosX, y: enemyPosY }) {
+    constructor(ctx, canvasSize, platforms, player, enemyBullets, { x: enemyPosX, y: enemyPosY }) {
         this.ctx = ctx
         this.canvasSize = canvasSize
         this.platforms = platforms
         this.player = player
         this.enemySize = { w: 30, h: 50 }
         this.enemyPos = { x: enemyPosX, y: enemyPosY }
-        this.enemyBullets = []
+        this.enemyBullets = enemyBullets
+        this.enemyLives = 3
 
         this.shoot()
     }
@@ -17,16 +18,15 @@ class Enemy {
         this.ctx.fillStyle = "green"
         this.ctx.fillRect(this.enemyPos.x, this.enemyPos.y, this.enemySize.w, this.enemySize.h)
         this.enemyBullets.forEach(elm => elm.draw())
-        console.log(this.enemyBullets)
         this.moveBullets()
         this.clearBullets()
     }
 
     moveBullets() {
         if (this.player.fluidLeft && this.player.playerPos.x <= 300) {
-            this.enemyBullets.forEach(elm => elm.enemyBulletPos.x += 3)
+            this.enemyBullets.forEach(elm => elm.enemyBulletPos.x += 5)
         } else if (this.player.fluidRight && this.player.playerPos.x >= 700) {
-            this.enemyBullets.forEach(elm => elm.enemyBulletPos.x -= 3)
+            this.enemyBullets.forEach(elm => elm.enemyBulletPos.x -= 5)
         }
     }
 
@@ -36,7 +36,7 @@ class Enemy {
             this.enemyBullets.push(
                 new EnemyBullet(this.ctx, this.enemyPos, this.enemySize)
             )
-        }, 2000)
+        }, 1000)
 
     }
 
