@@ -1,27 +1,47 @@
 class Enemy {
 
-    constructor(ctx, canvasSize, platforms, player, enemyBullets, { x: enemyPosX, y: enemyPosY }) {
+    constructor(ctx, canvasSize, platforms, player, { x: enemyPosX, y: enemyPosY }) {
         this.ctx = ctx
         this.canvasSize = canvasSize
         this.platforms = platforms
         this.player = player
-        this.enemySize = { w: 30, h: 50 }
+        this.enemySize = { w: 150, h: 100 }
         this.enemyPos = { x: enemyPosX, y: enemyPosY }
-        this.enemyBullets = enemyBullets
+        this.enemyBullets = []
         this.enemyLives = 3
+
+        this.imgEnemy = new Image()
+        this.imgEnemy.src = './img/soldier.png'
+        this.imgEnemy.framesIndex = 3
+        this.imgEnemy.frames = 4
 
         this.shoot()
     }
 
 
-    draw() {
-        this.ctx.fillStyle = "green"
-        this.ctx.fillRect(this.enemyPos.x, this.enemyPos.y, this.enemySize.w, this.enemySize.h)
+    draw(framesCounter) {
+        this.ctx.drawImage(
+            this.imgEnemy,
+            (this.imgEnemy.width / this.imgEnemy.frames) * this.imgEnemy.framesIndex, 0,
+            this.imgEnemy.width / this.imgEnemy.frames, this.imgEnemy.height,
+            this.enemyPos.x, this.enemyPos.y, this.enemySize.w, this.enemySize.h)
+        this.animateEnemy(framesCounter)
         this.enemyBullets.forEach(elm => elm.draw())
         this.moveBullets()
         this.clearBullets()
+
     }
 
+
+    animateEnemy(framesCounter) {
+        if (framesCounter % 18 === 0) {
+            this.imgEnemy.framesIndex--
+        }
+        if (this.imgEnemy.framesIndex < 0) {
+            this.imgEnemy.framesIndex = 3
+        }
+
+    }
     moveBullets() {
         if (this.player.fluidLeft && this.player.playerPos.x <= 300) {
             this.enemyBullets.forEach(elm => elm.enemyBulletPos.x += 5)

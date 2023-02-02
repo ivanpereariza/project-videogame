@@ -46,15 +46,10 @@ class Player {
         this.draw(framesCounter)
         this.collisions()
         this.clearBullets()
-
-
     }
 
 
-
     draw(framesCounter) {
-        console.log(this.playerVel.y)
-
         if (this.fluidRight) {
             this.ctx.drawImage(
                 this.imgRight,
@@ -82,22 +77,7 @@ class Player {
 
 
 
-
-
-        // this.ctx.fillRect(this.playerPos.x, this.playerPos.y, this.playerSize.w, this.playerSize.h)
-
-
-
-
-
-
-
-
-
-        this.bullets.forEach(elm => elm.draw())
-        this.ctx.font = '50px Serif'
-        this.ctx.fillText(`Coins: ${this.coinsCount}`, 1300, 50)
-        this.ctx.fillText(`Lives: ${this.livesCount}`, 50, 50)
+        this.bullets.forEach(elm => elm.draw(framesCounter))
         this.move()
 
 
@@ -141,8 +121,6 @@ class Player {
         this.collisionWithBoss()
         this.collisionBossBullet()
         this.collisionPlayerBulletBoss()
-        this.collisionPlayerWallsLeft()
-        this.collisionPlayerWallsRight()
     }
 
 
@@ -268,6 +246,28 @@ class Player {
 
     shoot() {
         this.bullets.push(new Bullet(this.ctx, this.playerPos, this.playerSize, this.playerPos0, this.fluidLeft, this.fluidRight))
+        this.shootSound()
+    }
+
+    shootSound() {
+        this.playerSound = new Audio()
+        this.playerSound.src = './sounds/player_shoot.mp3'
+        this.playerSound.volume = 0.05
+        this.playerSound.play()
+    }
+
+    coinSound() {
+        this.coinsSound = new Audio()
+        this.coinsSound.src = './sounds/coin.mp3'
+        this.coinsSound.volume = 0.5
+        this.coinsSound.play()
+    }
+
+    healSound() {
+        this.healsSound = new Audio()
+        this.healsSound.src = './sounds/heal.mp3'
+        this.healsSound.volume = 0.5
+        this.healsSound.play()
     }
 
     clearBullets() {
@@ -336,6 +336,7 @@ class Player {
                 this.playerPos.y + this.playerSize.h > elm.coinPos.y) {
                 this.coins.splice(i, 1)
                 this.coinsCount++
+                this.coinSound()
             }
         })
     }
@@ -351,6 +352,7 @@ class Player {
                     this.playerPos.y + this.playerSize.h > elm.heartPos.y) {
                     this.hearts.splice(i, 1)
                     this.livesCount++
+                    this.healSound()
                 }
             })
         }
@@ -426,33 +428,6 @@ class Player {
         })
     }
 
-
-    // Player with walls Left
-
-    collisionPlayerWallsLeft() {
-        this.wallsLeft.forEach(elm => {
-            if (elm.wallLeftPos.x < this.playerPos.x + this.playerSize.w &&
-                elm.wallLeftPos.y < this.playerPos.y + this.playerSize.h &&
-                elm.wallLeftPos.x + elm.wallLeftSize.w > this.playerPos.x &&
-                elm.wallLeftPos.y + elm.wallLeftSize.h > this.playerPos.y) {
-                if (elm.wallLeftPos.x < this.playerPos.x + this.playerSize.w) {
-                    this.fluidRight = false
-                }
-            }
-        })
-    }
-
-
-    collisionPlayerWallsRight() {
-        this.wallsRight.forEach(elm => {
-            if (elm.wallRightPos.x < this.playerPos.x + this.playerSize.w &&
-                elm.wallRightPos.y < this.playerPos.y + this.playerSize.h &&
-                elm.wallRightPos.x + elm.wallRightSize.w > this.playerPos.x &&
-                elm.wallRightPos.y + elm.wallRightSize.h > this.playerPos.y) {
-                this.fluidLeft = false
-            }
-        })
-    }
 
 
 }

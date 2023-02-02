@@ -14,13 +14,13 @@ class Background {
 
     init() {
         this.background = new Image()
-        this.background.src = "./img/fondo2.jpg"
+        this.background.src = "./img/fondoBuenoBueno.jpg"
     }
 
 
     draw() {
-        this.ctx.drawImage(this.background, this.backgroundPos.x, this.backgroundPos.y, this.backgroundSize.w, this.backgroundSize.h)
-        this.ctx.drawImage(this.background, this.backgroundPos.x + this.backgroundSize.w, this.backgroundPos.y, this.backgroundSize.w, this.backgroundSize.h)
+        this.ctx.drawImage(this.background, this.backgroundPos.x - 200, this.backgroundPos.y, this.backgroundSize.w, this.backgroundSize.h)
+        this.ctx.drawImage(this.background, this.backgroundPos.x - 200 + this.backgroundSize.w, this.backgroundPos.y, this.backgroundSize.w, this.backgroundSize.h)
         this.move()
     }
 
