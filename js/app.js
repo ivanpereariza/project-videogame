@@ -124,7 +124,7 @@ const controlerApp = {
         clearInterval(this.interval)
         setTimeout(() => {
             location.reload()
-        }, 5000)
+        }, 2000)
     },
 
     drawWin() {
