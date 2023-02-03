@@ -70,7 +70,7 @@ const controlerApp = {
 
     ambientSound() {
         this.sound = new Audio()
-        this.sound.src = './sounds/background_sound.mp3'
+        this.sound.src = './sounds/Background_sound.mp3'
         this.sound.volume = 0.2
         document.addEventListener('keydown', () => this.sound.play())
     },
