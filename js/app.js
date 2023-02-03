@@ -184,7 +184,7 @@ const controlerApp = {
             new Platforms(this.ctx, this.canvasSize, { x: 2400, y: 500 }, { w: 100, h: 100 }, 2),
             new Platforms(this.ctx, this.canvasSize, { x: 2600, y: 400 }, { w: 200, h: 100 }, 2),
             new Platforms(this.ctx, this.canvasSize, { x: 2900, y: 350 }, { w: 200, h: 100 }, 2),
-            new Platforms(this.ctx, this.canvasSize, { x: 3800, y: 400 }, { w: 200, h: 300 }, 1),
+            new Platforms(this.ctx, this.canvasSize, { x: 3798, y: 400 }, { w: 202, h: 300 }, 1),
             new Platforms(this.ctx, this.canvasSize, { x: 4700, y: 400 }, { w: 200, h: 300 }, 1),
             new Platforms(this.ctx, this.canvasSize, { x: 3500, y: 600 }, { w: 500, h: 100 }, 1),
             new Platforms(this.ctx, this.canvasSize, { x: 4000, y: 600 }, { w: 500, h: 100 }, 1),

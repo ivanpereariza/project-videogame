@@ -6,7 +6,7 @@ class Boss {
         this.bossPos = { x: 11550, y: 120 }
         this.bossBullets = []
         this.player = player
-        this.bossLives = 50
+        this.bossLives = 100
 
         this.imgBoss = new Image()
         this.imgBoss.src = './img/boss_shoot.png'
