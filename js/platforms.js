@@ -17,13 +17,6 @@ class Platforms {
         if (this.platformType === 1) {
             this.platform = new Image()
             this.platform.src = "./img/Suelo.png"
-            this.platform.onload = function () {
-                var pattern = context.createPattern(platform, 'repeat-x');
-
-                context.rect(0, 0, canvas.width, canvas.height);
-                context.fillStyle = pattern;
-                context.fill();
-            };
 
 
         } else if (this.platformType === 2) {
