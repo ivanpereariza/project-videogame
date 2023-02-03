@@ -71,7 +71,7 @@ const controlerApp = {
     ambientSound() {
         this.sound = new Audio()
         this.sound.src = './sounds/background_sound.mp3'
-        this.sound.volume = 0.15
+        this.sound.volume = 0.2
         document.addEventListener('keydown', () => this.sound.play())
     },
 
@@ -100,13 +100,13 @@ const controlerApp = {
             this.clearAll()
             this.drawAll()
             this.player.move()
-            // if (this.player.livesCount === 0) {
-            //     this.sound.pause()
-            //     this.gameOver()
-            // } else if ((this.player.playerPos.y + this.player.playerSize.h) === this.canvasSize.h) {
-            //     this.sound.pause()
-            //     this.gameOver()
-            // }
+            if (this.player.livesCount === 0) {
+                this.sound.pause()
+                this.gameOver()
+            } else if ((this.player.playerPos.y + this.player.playerSize.h) === this.canvasSize.h) {
+                this.sound.pause()
+                this.gameOver()
+            }
             if (this.boss.bossLives === 0) {
                 this.YouWin()
             }

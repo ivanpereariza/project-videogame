@@ -176,15 +176,6 @@ class Player {
             this.wallsLeft.forEach(elm => elm.wallLeftPos.x -= 5)
         }
 
-        // //Walls Right movement
-        // if (this.fluidRight && this.playerPos.x <= 300) {
-        //     this.wallsRight.forEach(elm => elm.wallRightPos.x += 5)
-        // } else if (this.fluidRight && this.playerPos.x >= 700) {
-        //     this.wallsRight.forEach(elm => elm.wallRightPos.x -= 5)
-        // }
-
-
-
         //Boss movement
         if (this.fluidLeft && this.playerPos.x <= 300) {
             this.boss.bossPos.x += 5
